@@ -1,0 +1,79 @@
+/* Vaaleanvihreä urheilu- ja hyvinvointiteema */
+body {
+    position: relative;
+}
+
+/* Navigaatiopalkki ja Footer: vihreäteema */
+.navbar-custom,
+footer {
+    background-color: #4a7559 !important;
+}
+
+/* Logon nimi ja navigaation linkit: Raikas mintunvihreä */
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-nav .nav-link,
+.navbar-custom .nav-link,
+footer p,
+footer small {
+    color: #d1e7dd !important;
+    font-weight: 500;
+}
+
+/* Hover-efekti kun hiiri on päällä */
+.navbar-custom .nav-item .nav-link.active,
+.navbar-custom .nav-item:hover .nav-link,
+.navbar-custom .nav-link:hover {
+    color: #ffffff !important;
+    text-decoration: underline;
+    text-decoration-color: #d1e7dd;
+}
+
+/* Mobiilinäkymän hampurilaispainikkeen kehys ja viivat mintunvihreäksi */
+.custom-toggler.navbar-toggler {
+    border-color: #d1e7dd !important;
+}
+
+.custom-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://w3.org stroke='%23d1e7dd' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E") !important;
+}
+
+/* MOBIILIKORJAUS: Tehdään hampurilaisvalikon kolme viivaa puhtaan valkoisiksi */
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://w3.org stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E") !important;
+}
+
+/* Tehdään painikkeen ohuesta reunasta siisti ja vaaleanvihreä */
+.navbar-toggler {
+    border-color: #d1e7dd !important;
+}
+
+/* Kun valikko aukeaa mobiilissa, se saa tismalleen saman tummanvihreän taustan  */
+.navbar-collapse {
+    background-color: #4a7559 !important;
+    padding: 15px 10px !important;
+}
+
+/* KORJAUS: Annetaan etusivun aloitustekstille kunnolla ilmatilaa  */
+#alku {
+    padding-top: 140px !important;
+}
+
+/* KORJAUS: Siirretään kaikkien osioiden aloitusta alaspäin, jotta skaalautuu varmasti oikein.  */
+#ruudukko,
+#kortit,
+#haitari,
+#taulukko {
+    padding-top: 130px !important;
+    margin-top: -50px !important;
+    /* Pitää huolen, ettei tyhjää tilaa tule liikaa rullauksen ulkopuolella */
+}
+
+/* KORJAUS  OHJEEN MUKAAN: Kuvakaruselliin  */
+#karuselli {
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    margin-top: 40px !important;
+    /* Laskettu, koska #alku hoitaa nyt yläpuolen tyhjän tilan */
+    margin-bottom: 60px !important;
+}
