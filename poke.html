@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon haku</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Mari Siljamo<br><small>Hyvinvointi</small></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#valikko"
+                aria-controls="valikko" aria-expanded="false" aria-label="Avaa valikko">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="valikko">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Etusivu</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#karuselli">Karuselli</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#ruudukko">Ruudukko</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#kortit">Kortit</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#haitari">Haitari</a></li>
+                    <li class="nav-item"><a class="nav-link" href="index.html#taulukko">Taulukko</a></li>
+                    <li class="nav-item"><a class="nav-link " href="toteutus.html">Toteutus</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="poke.html">Pokemon haku</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--sisältö-->
+    <main class="container py-5 text-center">
+        <h1>Pokemon haku</h1>
+
+
+        <!-- hakulaatikko -->
+        <p>
+            <input type="text" id="pokemonName" placeholder="Enter Pokemon name">
+            <button onclick="poke()">Hae</button><br>
+        </p>
+
+        <!--Nimi -->
+        <div id="nimi" class="fs-3 fw-bold my-3">Kirjoita laatikkoon Pokemonin nimi</div>
+
+        <!--Pokemon kuva-->
+        <p id="kuva2"></p>
+
+        <!--jos haku epäonnistuu-->
+        <div id="vastaus"></div>
+
+        <!--käännä painike ja ominaisuudet-->
+        <div id="kaannosOsa" class="d-none mt-4">
+            <button id="kaannaNappi" class="btn btn-success my-3">Käännä</button>
+
+
+            <div id="ominaisuudet" class="row justify-content-center d-none">
+                <div class="col-md-6 ">
+                    <div class="card shadow-sm text-start">
+                        <div class="card-header bg-dark text-white fw-bold">Pokemonin ominaisuudet</div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>ID-numero:</strong> <span id="omin-id"></span></li>
+                            <li class="list-group-item"><strong>Paino:</strong> <span id="omin-paino"></span> kg</li>
+                            <li class="list-group-item"><strong>Korkeus:</strong> <span id="omin-korkeus"></span> m</li>
+                        </ul>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        //Luodaan globaali muuttuja alkuun
+
+        let pokenData = null;
+        let pokemonName;
+
+        // Funktion poke() määrittely 
+        function poke() {
+            pokemonName = document.getElementById("pokemonName").value.toLowerCase().trim();
+            let name = document.getElementById("pokemonName").value;
+
+            document.getElementById("vastaus").innerHTML = "";
+            document.getElementById("kaannosOsa").classList.add("d-none");
+            document.getElementById("ominaisuudet").classList.add("d-none");
+            if (!pokemonName) {
+                document.getElementById("nimi").innerHTML = "Kirjoita laatikkoon Pokemonin nimi";
+                return;
+            }
+
+            //Tehdään fetch()
+            fetch("https://pokeapi.co/api/v2/pokemon/" + pokemonName)
+                .then(function (response) {
+                    if (!response.ok) {
+                        throw new Error("Pokemonia ei löytynyt");
+
+                    }
+                    return response.json();
+                })
+
+                .then(function (responseJson) {
+                    pokenData = responseJson;
+                    pokekuva(responseJson);
+                })
+                .catch(function (error) {
+                    document.getElementById("nimi").innerHTML = "Haku epäonnistui.";
+                    document.getElementById("kuva2").innerHTML = "";
+                    document.getElementById("vastaus").innerHTML = "<p>Tietoa ei pystytä hakemaan</p>";
+                    document.getElementById("pokemonName").value = "";
+                });
+        } // sulkee poke() funktion
+
+        //funktion pokekuva() (objekti)
+        function pokekuva(obj) {
+            //tallenennetaan muuttujaan linkki missä poken kuva
+            let pokeurl = obj.sprites.front_default;
+
+            //kirjoitetaan kuva ja nimi sivulle ja tyhjennetään hakukenttä
+            document.getElementById("kuva2").innerHTML = "<img src='" + pokeurl + "' style='width: 150px;'>";
+            document.getElementById("nimi").innerHTML = "<b>" + obj.name + "</b>";
+            document.getElementById("pokemonName").value = "";
+
+            // osa 2 funktio joka kääntää Pokemonin selin ja näyttää ominaisuudet
+            document.getElementById("kaannosOsa").classList.remove("d-none");
+            document.getElementById("kaannaNappi").onclick = kaannaSelin;
+        } // sulkee pokekuva() funktion
+
+        // haetaan takakuva
+        function kaannaSelin() {
+            if (pokenData) {
+                let takakuvaUrl = pokenData.sprites.back_default || pokenData.sprites.front_default;
+
+                // korvataan edellinen kuva takakuvalla
+                document.getElementById("kuva2").innerHTML = "<img src='" + takakuvaUrl + "' style='width: 150px;'>";
+
+                //päivitetään ominaisuudet näkyviin
+                document.getElementById("omin-id").innerText = pokenData.id;
+                document.getElementById("omin-paino").innerText = (pokenData.weight / 10).toFixed(1);
+                document.getElementById("omin-korkeus").innerText = (pokenData.height / 10).toFixed(1);
+
+                //näytetään ominaisuuskortti
+                document.getElementById("ominaisuudet").classList.remove("d-none");
+            } // sulkee if (pokenData) lohkon
+        } // sulkee kaannaSelin() funktion
+    </script>
+
+
+
+
+</body>
+
+</html>
